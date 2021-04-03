@@ -3,7 +3,11 @@
 --- !u!78 &1
 TagManager:
   serializedVersion: 2
-  tags: []
+  tags:
+  - Walkable
+  - NonWalkable
+  - Building
+  - Pedestrian
   layers:
   - Default
   - TransparentFX
