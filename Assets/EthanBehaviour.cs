@@ -33,6 +33,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             }
             if (character.transform.position.y < 0)
             {
+                Debug.Log("Despawned from falling off the map ",character);
+                TimedSpawn.Pedestrians.Remove(character.gameObject);
                 Destroy(character.gameObject);
             }
         }
