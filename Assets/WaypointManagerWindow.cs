@@ -104,15 +104,14 @@ public class WaypointManagerWindow : EditorWindow
 
         waypointObject.transform.position = selectedWaypoint.transform.position;
         waypointObject.transform.forward = selectedWaypoint.transform.forward;
-
-        newWaypoint.previousWaypoint = selectedWaypoint;
-        
+       
         if(selectedWaypoint.nextWaypoint != null)
         {
             selectedWaypoint.nextWaypoint.previousWaypoint = newWaypoint;
             newWaypoint.nextWaypoint = selectedWaypoint.nextWaypoint;
         }
         selectedWaypoint.nextWaypoint = newWaypoint;
+        newWaypoint.previousWaypoint = selectedWaypoint;
         
         newWaypoint.transform.SetSiblingIndex(selectedWaypoint.transform.GetSiblingIndex());
 
