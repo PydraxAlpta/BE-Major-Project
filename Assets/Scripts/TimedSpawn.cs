@@ -11,7 +11,7 @@ public class TimedSpawn : MonoBehaviour
     public float spawnDelay;
     public static List<GameObject> Pedestrians;
 
-    public int maximumSpawns = 10;
+    public int maximumSpawns = 25;
     // Use this for initialization
     void Start()
     {
@@ -29,6 +29,7 @@ public class TimedSpawn : MonoBehaviour
             return;
         }
         var temp = Instantiate(spawnee, transform.position, transform.rotation);
+        temp.transform.SetParent(GameObject.FindGameObjectWithTag("Pedestrian").transform,true);
         Pedestrians.Add(temp);
         if (GameObject.FindGameObjectsWithTag(spawnee.tag)?.Length >= maximumSpawns)
         {
