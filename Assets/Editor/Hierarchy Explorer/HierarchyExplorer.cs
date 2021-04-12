@@ -56,7 +56,7 @@ namespace HierarchyExplorer
             messageType = MessageType.None;
 
             hierarchyChanged = true;
-            EditorApplication.hierarchyWindowChanged += OnHierarchyChanged;
+            EditorApplication.hierarchyChanged += OnHierarchyChanged;
         }
 
         [MenuItem("Tools/Hierarchy Explorer/Invert selection %&i")]
