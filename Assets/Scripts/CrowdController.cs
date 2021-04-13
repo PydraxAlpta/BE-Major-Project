@@ -89,13 +89,12 @@ public class CrowdController : MonoBehaviour
 
     public void CheckSimulationComplete()
     {
+        Debug.Log("Pedestrians present: " + Pedestrians.Count);
         if (Pedestrians.Count == 0)
         {
-            Destroy(this);
-        }
-        else
-        {
-            Debug.Log("Pedestrians present: " + Pedestrians.Count);
+            Debug.Log("Simulation finished");
+            Debug.Log(this.gameObject);
+            Destroy(this.gameObject);
         }
     }
 }

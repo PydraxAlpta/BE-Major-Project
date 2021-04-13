@@ -28,8 +28,8 @@ public class TimedSpawn : MonoBehaviour
             CancelInvoke("SpawnObject");
             return;
         }
-        var temp = Instantiate(spawnee, Waypoints.startPoint.transform.position,Waypoints.startPoint.transform.rotation);
-        temp.transform.SetParent(GameObject.FindGameObjectWithTag("Pedestrian").transform,true);
+        var temp = Instantiate(spawnee, transform.position, transform.rotation);
+        temp.transform.SetParent(GameObject.FindGameObjectWithTag("Pedestrian").transform, true);
         crowdController.Pedestrians.Add(temp);
         spawnCount++;
         if (spawnCount >= maximumSpawns)
