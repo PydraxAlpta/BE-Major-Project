@@ -63,6 +63,10 @@ public class CrowdController : MonoBehaviour
             Vector3 desiredVector, sumThisPedestrian;
             sumThisPedestrian = (weights[0] * Positions[i] ?? defaultVector+ weights[1] * Velocities[i] ?? defaultVector + weights[2] * Destinations[i] ?? defaultVector) - (weights[3] * Positions[i] ?? defaultVector+ weights[4] * Velocities[i] ?? defaultVector + weights[5] * Destinations[i] ?? defaultVector);
             desiredVector = sumThisPedestrian + sumOtherPedestrians;
+            if (desiredVector.magnitude > 1)
+            {
+                desiredVector.Normalize();
+            }
             Pedestrians[i].GetComponent<UnityStandardAssets.Characters.ThirdPerson.EthanBehaviour>().SetDesiredDirection(desiredVector);
         }
     }
