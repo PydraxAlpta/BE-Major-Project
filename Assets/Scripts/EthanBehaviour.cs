@@ -53,9 +53,10 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             {
                 return;
             }
-            if (UnityEngine.Random.Range(1, 1000) > 990)
-                SetDesiredDirection(); //small probabilistic call to set on the right direction 
-                                       //if it misses the waypoint for whatever reason
+            if(!crowdController.runningUnderGA)
+                if (UnityEngine.Random.Range(1, 1000) > 990)
+                    SetDesiredDirection(); //small probabilistic call to set on the right direction 
+                                           //if it misses the waypoint for whatever reason
             character.Move(speed * desiredDirection, false, false);
             // if (UnityEngine.Random.Range(1, 100) > 98)
             // {
@@ -74,7 +75,8 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                     return;
                 }
                 crowdController.UpdateFitness(5);
-                SetDesiredDirection();
+                if(!crowdController.runningUnderGA)
+                    SetDesiredDirection();
             }
         }
         public bool KillBelowYZero()
