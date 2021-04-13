@@ -9,7 +9,7 @@ public class TimedSpawn : MonoBehaviour
     public bool stopSpawning = false;
     public float spawnTime;
     public float spawnDelay;
-    
+    public int spawnCount = 0;
     private CrowdController crowdController;
     public int maximumSpawns = 25;
     // Use this for initialization
@@ -31,7 +31,8 @@ public class TimedSpawn : MonoBehaviour
         var temp = Instantiate(spawnee, transform.position, transform.rotation);
         temp.transform.SetParent(GameObject.FindGameObjectWithTag("Pedestrian").transform,true);
         crowdController.Pedestrians.Add(temp);
-        if (crowdController.Pedestrians.Count >= maximumSpawns)
+        spawnCount++;
+        if (spawnCount >= maximumSpawns)
         {
             stopSpawning = true;
             Debug.Log("Spawning Limit reached");
