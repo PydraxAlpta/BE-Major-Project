@@ -3,9 +3,10 @@ using UnityEngine.UI;
 
 public class CollisionBehavior : MonoBehaviour
 {
+    private CrowdController crowdController;
     void Start()
     {
-
+        crowdController = transform.root.GetComponent<CrowdController>();
     }
     void Update()
     {
@@ -18,6 +19,7 @@ public class CollisionBehavior : MonoBehaviour
         if(collision.gameObject.tag != "Walkable")
         {
             Debug.Log("Collided with non walkway",this.gameObject);
+            crowdController.UpdateFitness(-50);
         }
     }
 
@@ -27,6 +29,7 @@ public class CollisionBehavior : MonoBehaviour
         if(collision.gameObject.tag != "Walkable")
         {
             Debug.Log("Colliding with non walkway",this.gameObject);
+            crowdController.UpdateFitness(-1);
         }
     }
 

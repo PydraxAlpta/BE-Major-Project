@@ -41,7 +41,12 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             desiredDirection.y = 0;
             desiredDirection.Normalize();
         }
-
+        public void SetDesiredDirection(Vector3 vector)
+        {
+            if(!crowdController.runningUnderGA)
+                return;
+            desiredDirection = vector;
+        }
         void FixedUpdate()
         {
             if (KillBelowYZero())
