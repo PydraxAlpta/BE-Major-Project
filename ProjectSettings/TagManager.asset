@@ -8,6 +8,8 @@ TagManager:
   - NonWalkable
   - Building
   - Pedestrian
+  - CrowdController
+  - GeneticAlgorithm
   layers:
   - Default
   - TransparentFX
