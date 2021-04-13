@@ -47,4 +47,5 @@ MonoBehaviour:
   stopSpawning: 0
   spawnTime: 2
   spawnDelay: 3
-  maximumSpawns: 25
+  spawnCount: 0
+  maximumSpawns: 10
