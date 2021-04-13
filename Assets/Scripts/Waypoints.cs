@@ -4,7 +4,12 @@ using UnityEngine;
 
 public class Waypoints : MonoBehaviour
 {
-    public static Waypoint firstWaypoint;
+    private static Waypoint firstWaypoint;
+    public static GameObject startPoint;
+    void Start()
+    {
+        startPoint = GameObject.Find("StartPoint");
+    }
     public static Waypoint GetFirstWaypoint()
     {
         if (firstWaypoint != null)

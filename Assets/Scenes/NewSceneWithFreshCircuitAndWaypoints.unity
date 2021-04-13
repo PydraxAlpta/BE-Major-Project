@@ -223,7 +223,7 @@ GameObject:
   - component: {fileID: 379526316}
   - component: {fileID: 379526315}
   m_Layer: 5
-  m_Name: Text
+  m_Name: SimulationDetails
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -245,8 +245,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: 0, y: 0}
-  m_SizeDelta: {x: 160, y: 30}
+  m_AnchoredPosition: {x: 429, y: 13.4}
+  m_SizeDelta: {x: 160, y: 500}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &379526315
 MonoBehaviour:
@@ -279,7 +279,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: New Text
+  m_Text: 
 --- !u!222 &379526316
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -1168,6 +1168,11 @@ PrefabInstance:
       propertyPath: m_StaticEditorFlags
       value: 4294967295
       objectReference: {fileID: 0}
+    - target: {fileID: 8236454890653416596, guid: e59ae0fe1d78da6499ba5b97d873888a,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: -5
+      objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: e59ae0fe1d78da6499ba5b97d873888a, type: 3}
 --- !u!1001 &7071100890963358045
@@ -1191,7 +1196,17 @@ PrefabInstance:
     - target: {fileID: 7071100891432489901, guid: 4b93338fa642130488c2c24cbc9b3ab3,
         type: 3}
       propertyPath: runningUnderGA
-      value: 1
+      value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 7071100891432489901, guid: 4b93338fa642130488c2c24cbc9b3ab3,
+        type: 3}
+      propertyPath: text
+      value: 
+      objectReference: {fileID: 379526315}
+    - target: {fileID: 7071100891432489901, guid: 4b93338fa642130488c2c24cbc9b3ab3,
+        type: 3}
+      propertyPath: repeatRate
+      value: 2
       objectReference: {fileID: 0}
     - target: {fileID: 7071100891432489906, guid: 4b93338fa642130488c2c24cbc9b3ab3,
         type: 3}

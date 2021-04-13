@@ -25,6 +25,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             // desiredDirection = UnityEngine.Random.insideUnitCircle.normalized;
             // desiredDirection.z = desiredDirection.y;
             // desiredDirection.y = 0;
+            desiredDirection = new Vector3(0,0,0);//initial value
             crowdController = transform.root.GetComponent<CrowdController>();
             destinationWaypoint = Waypoints.GetFirstWaypoint();
             character = GetComponent<ThirdPersonCharacter>();
@@ -94,6 +95,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         {
             crowdController.Pedestrians.Remove(character.gameObject);
             Destroy(character.gameObject);
+            crowdController.CheckSimulationComplete();
         }
     }
 }
