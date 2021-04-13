@@ -17,7 +17,6 @@ public class TimedSpawn : MonoBehaviour
     {
         crowdController = transform.root.GetComponent<CrowdController>();
         crowdController.Pedestrians = new List<GameObject>();
-        crowdController.Pedestrians.Add(spawnee);
         InvokeRepeating("SpawnObject", spawnTime, spawnDelay);
     }
 
