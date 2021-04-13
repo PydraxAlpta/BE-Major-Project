@@ -9,14 +9,15 @@ public class TimedSpawn : MonoBehaviour
     public bool stopSpawning = false;
     public float spawnTime;
     public float spawnDelay;
-    public static List<GameObject> Pedestrians;
-
+    
+    private CrowdController crowdController;
     public int maximumSpawns = 25;
     // Use this for initialization
     void Start()
     {
-        Pedestrians = new List<GameObject>();
-        Pedestrians.Add(spawnee);
+        crowdController = transform.root.GetComponent<CrowdController>();
+        crowdController.Pedestrians = new List<GameObject>();
+        crowdController.Pedestrians.Add(spawnee);
         InvokeRepeating("SpawnObject", spawnTime, spawnDelay);
     }
 
@@ -30,7 +31,7 @@ public class TimedSpawn : MonoBehaviour
         }
         var temp = Instantiate(spawnee, transform.position, transform.rotation);
         temp.transform.SetParent(GameObject.FindGameObjectWithTag("Pedestrian").transform,true);
-        Pedestrians.Add(temp);
+        crowdController.Pedestrians.Add(temp);
         if (GameObject.FindGameObjectsWithTag(spawnee.tag)?.Length >= maximumSpawns)
         {
             stopSpawning = true;
