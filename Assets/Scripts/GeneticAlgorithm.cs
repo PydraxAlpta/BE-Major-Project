@@ -6,10 +6,83 @@ using UnityEngine;
 using System.Text;
 public class GeneticAlgorithm : MonoBehaviour
 {
-    int[] children = { 50, 35, 100, 200, 10 };
+    long[] children;
+    public CrowdController crowdControllerIndividual;
+    int currentGeneration = 0, maxGenerations = 1;
+    int currentCC = 0, maxCCPerGeneration = 5;
+    int [] fitnessesOfCurrentGeneration;
+    int maxFitnessObserved = int.MinValue;
+    long maxFitnessGC = -1;
+    const int minFitnessCutoff = -10000;
     void Start()
     {
-        
+        children = new long[maxCCPerGeneration];
+        for (int i = 0; i < children.Length; i++)
+        {
+            children[i] = (long)UnityEngine.Random.Range(0, long.MaxValue);
+        }
+        fitnessesOfCurrentGeneration = new int[maxCCPerGeneration];
+        CreateNewCCInstance();
+    }
+
+    private void CreateNewCCInstance()
+    {
+        Instantiate(crowdControllerIndividual);
+        crowdControllerIndividual.runningUnderGA = true;
+        crowdControllerIndividual.geneticCode = Convert.ToString(children[currentCC],2);
+        currentCC++;
+    }
+    private void EndGeneration()
+    {
+        currentGeneration++;
+        for (int i =0;i<maxCCPerGeneration;++i)
+        {
+            if(fitnessesOfCurrentGeneration[i] > maxFitnessObserved)
+            {
+                maxFitnessObserved = fitnessesOfCurrentGeneration[i];
+                maxFitnessGC = children[i];
+            }
+        }
+        if(currentGeneration<maxGenerations)
+        {
+            //do selection crossover mutation stuff
+
+            //and start next Generation
+            currentCC = 0;
+        }
+        else
+        {
+            Debug.Log($"MAximum fitness observed: {maxFitnessObserved} with Genetic Code {maxFitnessGC}");
+            Destroy(this.gameObject);
+        }
+    }
+    void FixedUpdate()
+    {
+        if(crowdControllerIndividual == null)
+        {
+            if(currentCC<maxCCPerGeneration)
+            {
+                CreateNewCCInstance();
+            }
+            else
+            {
+                EndGeneration();
+            }
+        }
+        else if(crowdControllerIndividual.finishedSimulation || (crowdControllerIndividual.fitness < minFitnessCutoff))
+        {
+            fitnessesOfCurrentGeneration[currentCC] = crowdControllerIndividual.fitness;
+            if(crowdControllerIndividual.finishedSimulation)
+            {
+                Debug.Log($"Instance with Genetic Code: {crowdControllerIndividual.geneticCode} finished with fitness: {crowdControllerIndividual.fitness}");
+            }
+            else
+            {
+                Debug.Log($"Instance with Genetic Code: {crowdControllerIndividual.geneticCode} forcibly finished with fitness: {crowdControllerIndividual.fitness}");
+            }
+
+            Destroy(crowdControllerIndividual.gameObject);
+        }
     }
     public string crossover(string parent1, string parent2)
     {
@@ -20,7 +93,7 @@ public class GeneticAlgorithm : MonoBehaviour
         parent2 = parent2.PadLeft(8, '0');
 
         string crossoverChild = parent1.Substring(0, 4) + parent2.Substring(4, 4);
-        //python equivalent of parent1[0:4] + parent1[4:8] 
+        //python equivalent of parent1[0:4] + parent2[4:8] 
 
         return crossoverChild; //single child string
     }
