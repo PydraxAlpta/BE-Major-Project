@@ -37,7 +37,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         {
             if (crowdController.runningUnderGA)
                 return;
-            destinationVector = destinationWaypoint.GetPosition();
+            // destinationVector = destinationWaypoint.GetPosition();
             desiredDirection = destinationVector - character.transform.position;
             desiredDirection.y = 0;
             desiredDirection.Normalize();
@@ -46,6 +46,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
         {
             if(!crowdController.runningUnderGA)
                 return;
+            // destinationVector = destinationWaypoint.GetPosition();
             desiredDirection = vector;
         }
         void FixedUpdate()
@@ -56,7 +57,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             }
             if(!crowdController.runningUnderGA)
                 if (UnityEngine.Random.Range(1, 1000) > 990)
-                    SetDesiredDirection(); //small probabilistic call to set on the right direction 
+                    SetDesiredDirection(); //low probabilistic call to set on the right direction 
                                            //if it misses the waypoint for whatever reason
             character.Move(speed * desiredDirection, false, false);
             // if (UnityEngine.Random.Range(1, 100) > 98)
@@ -76,6 +77,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                     return;
                 }
                 crowdController.UpdateFitness(5);
+                destinationVector = destinationWaypoint.GetPosition();
                 if(!crowdController.runningUnderGA)
                     SetDesiredDirection();
             }
