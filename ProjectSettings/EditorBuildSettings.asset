@@ -4,5 +4,8 @@
 EditorBuildSettings:
   m_ObjectHideFlags: 0
   serializedVersion: 2
-  m_Scenes: []
+  m_Scenes:
+  - enabled: 1
+    path: Assets/Scenes/NewSceneWithFreshCircuitAndWaypoints.unity
+    guid: 3ef9bae56e6406249be4c1ea66d0e328
   m_configObjects: {}
