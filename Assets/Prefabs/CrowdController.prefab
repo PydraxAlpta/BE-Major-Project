@@ -45,6 +45,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   geneticCode: 
   weights: []
+  runningUnderGA: 1
+  Pedestrians: []
   fitness: 0
   simulation: {fileID: 6405342775913710097, guid: 7b72ec5106dfea040bcd31b7a93d5b0d,
     type: 3}
+  text: {fileID: 0}
+  repeatRate: 2
+  finishedSimulation: 0
