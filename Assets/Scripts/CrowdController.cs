@@ -12,7 +12,7 @@ public class CrowdController : MonoBehaviour
     public List<GameObject> Pedestrians;
     public int fitness;
     public GameObject simulation;
-    public UnityEngine.UI.Text text;
+    UnityEngine.UI.Text text;
     public int repeatRate;
     public bool finishedSimulation = false;
     void Start()
@@ -31,20 +31,20 @@ public class CrowdController : MonoBehaviour
     private void InterpretGeneticCode()
     {
         weights = new float[6];
-        long gc = Convert.ToInt64(geneticCode,2);
-        int [] intWeights = new int[6];
+        long gc = Convert.ToInt64(geneticCode, 2);
+        int[] intWeights = new int[6];
         long temp = gc;
-        const int bitsPerWeight = 64/6;
-        for (int i = intWeights.Length - 1; i >= 0 ; i--)
+        const int bitsPerWeight = 64 / 6;
+        for (int i = intWeights.Length - 1; i >= 0; i--)
         {
-            intWeights[i] = (int) (temp % bitsPerWeight); //floor division
+            intWeights[i] = (int)(temp % bitsPerWeight); //floor division
             temp /= bitsPerWeight;
         }
         for (int i = 0; i < weights.Length; i++)
         {
-            weights[i] = ((float)(intWeights[i] - bitsPerWeight/2))/bitsPerWeight; 
+            weights[i] = ((float)(intWeights[i] - bitsPerWeight / 2)) / bitsPerWeight;
         }
-        
+
     }
     public void UpdateFitness(int change)
     {
@@ -57,9 +57,17 @@ public class CrowdController : MonoBehaviour
         {
             firstRun = false;
         }
+        else if (finishedSimulation)
+        {
+            return;
+        }
         else
         {
             CheckSimulationComplete();
+            if (finishedSimulation)
+            {
+                return;
+            }
         }
         List<Vector3> Positions = new List<Vector3>(), Velocities = new List<Vector3>(), Destinations = new List<Vector3>();
         Vector3 sumOtherPedestrians = new Vector3();
@@ -107,7 +115,7 @@ public class CrowdController : MonoBehaviour
 
     public void EndSimulation()
     {
-        Debug.Log("Ending simulation",this.gameObject);
+        Debug.Log("Ending simulation", this.gameObject);
         Destroy(this.gameObject);
     }
 }

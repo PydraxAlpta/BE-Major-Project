@@ -7,13 +7,14 @@ using System.Text;
 public class GeneticAlgorithm : MonoBehaviour
 {
     public long[] children;
-    public CrowdController crowdControllerIndividual;
-    public int currentGeneration = 0, maxGenerations = 1;
+    public GameObject CCPrefab;
+    CrowdController crowdController, crowdControllerIndividual;
+    public int currentGeneration = 0, maxGenerations = 2;
     public int currentCC = 0, maxCCPerGeneration = 5;
     public int[] fitnessesOfCurrentGeneration;
     public int maxFitnessObserved = int.MinValue;
     public long maxFitnessGC = -1;
-    public const int minFitnessCutoff = -10000;
+    public const int minFitnessCutoff = -4000;
     void Start()
     {
         children = new long[maxCCPerGeneration];
@@ -22,12 +23,13 @@ public class GeneticAlgorithm : MonoBehaviour
             children[i] = (long)UnityEngine.Random.Range(0, long.MaxValue);
         }
         fitnessesOfCurrentGeneration = new int[maxCCPerGeneration];
+        crowdController = CCPrefab.GetComponent<CrowdController>();
         CreateNewCCInstance();
     }
 
     private void CreateNewCCInstance()
     {
-        Instantiate(crowdControllerIndividual);
+        crowdControllerIndividual = Instantiate(crowdController);
         crowdControllerIndividual.runningUnderGA = true;
         crowdControllerIndividual.geneticCode = Convert.ToString(children[currentCC], 2);
         Debug.Log($"Instance with Genetic Code: {crowdControllerIndividual.geneticCode} started");
@@ -50,17 +52,27 @@ public class GeneticAlgorithm : MonoBehaviour
 
             //and start next Generation
             currentCC = 0;
+            return;
         }
         else
         {
             Debug.Log($"MAximum fitness observed: {maxFitnessObserved} with Genetic Code {maxFitnessGC}");
-            Destroy(this.gameObject);
+            if (Application.isEditor)
+            {
+                UnityEditor.EditorApplication.isPlaying = false;
+            }
+            else
+            {
+                Application.Quit();
+            }
         }
     }
-    void LateUpdate()
+    void Update()
     {
+        Debug.Log("Update called", this);
         if (crowdControllerIndividual == null)
         {
+            Debug.Log("Crowd controller is null", crowdControllerIndividual);
             if (currentCC < maxCCPerGeneration)
             {
                 CreateNewCCInstance();
@@ -69,19 +81,20 @@ public class GeneticAlgorithm : MonoBehaviour
             {
                 EndGeneration();
             }
+            return;
         }
-        else if (crowdControllerIndividual.finishedSimulation || (crowdControllerIndividual.fitness <= minFitnessCutoff))
+        Debug.Log("Crowd controller is not null", crowdControllerIndividual);
+        if (crowdControllerIndividual.fitness <= minFitnessCutoff)
         {
-            fitnessesOfCurrentGeneration[currentCC] = crowdControllerIndividual.fitness;
-            if (crowdControllerIndividual.finishedSimulation)
-            {
-                Debug.Log($"Instance with Genetic Code: {crowdControllerIndividual.geneticCode} finished with fitness: {crowdControllerIndividual.fitness}");
-            }
-            else
-            {
-                Debug.Log($"Instance with Genetic Code: {crowdControllerIndividual.geneticCode} forcibly finished with fitness: {crowdControllerIndividual.fitness}");
-            }
-            Debug.Log("Reached here");
+            crowdControllerIndividual.finishedSimulation = true;
+            Debug.Log($"Ending Instance due to low fitness with genetic code: {crowdControllerIndividual.geneticCode}");
+        }
+        if (crowdControllerIndividual.finishedSimulation)
+        {
+            fitnessesOfCurrentGeneration[currentCC-1] = crowdControllerIndividual.fitness;
+            Debug.Log("Reached before logging instance end");
+            Debug.Log($"Instance with Genetic Code: {crowdControllerIndividual.geneticCode} finished with fitness: {crowdControllerIndividual.fitness}");
+            Debug.Log("Reached after logging instance end");
             crowdControllerIndividual.EndSimulation();
             crowdControllerIndividual = null;
         }
