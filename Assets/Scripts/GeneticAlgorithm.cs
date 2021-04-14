@@ -59,7 +59,11 @@ public class GeneticAlgorithm : MonoBehaviour
             Debug.Log($"MAximum fitness observed: {maxFitnessObserved} with Genetic Code {maxFitnessGC}");
             if (Application.isEditor)
             {
-                UnityEditor.EditorApplication.isPlaying = false;
+                #if (UNITY_EDITOR)
+                {
+                    UnityEditor.EditorApplication.isPlaying = false;
+                }
+                #endif
             }
             else
             {
