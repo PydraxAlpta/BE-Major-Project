@@ -104,4 +104,10 @@ public class CrowdController : MonoBehaviour
             // Destroy(this.gameObject);
         }
     }
+
+    public void EndSimulation()
+    {
+        Debug.Log("Ending simulation",this.gameObject);
+        Destroy(this.gameObject);
+    }
 }
