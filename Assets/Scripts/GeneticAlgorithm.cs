@@ -10,9 +10,10 @@ public class GeneticAlgorithm : MonoBehaviour
     public long[] children;
     public GameObject CCPrefab;
     CrowdController crowdController, crowdControllerIndividual;
-    public int currentGeneration = 0, maxGenerations = 2;
-    public int currentCC = 0, maxCCPerGeneration = 5;
+    public int currentGeneration = 0, maxGenerations = 5;
+    public int currentCC = 0, maxCCPerGeneration = 10;
     public int[] fitnessesOfCurrentGeneration;
+    public int[] maxFitnessEachGeneration;
     public int maxFitnessObserved = int.MinValue;
     public long maxFitnessGC = -1;
     public const int minFitnessCutoff = -4000;
@@ -24,6 +25,7 @@ public class GeneticAlgorithm : MonoBehaviour
             children[i] = (long)UnityEngine.Random.Range(0, long.MaxValue);
         }
         fitnessesOfCurrentGeneration = new int[maxCCPerGeneration];
+        maxFitnessEachGeneration = new int[maxGenerations];
         crowdController = CCPrefab.GetComponent<CrowdController>();
         CreateNewCCInstance();
     }
@@ -38,6 +40,7 @@ public class GeneticAlgorithm : MonoBehaviour
     }
     private void EndGeneration()
     {
+        int fitnessImprovement;
         currentGeneration++;
         for (int i = 0; i < maxCCPerGeneration; ++i)
         {
@@ -47,10 +50,20 @@ public class GeneticAlgorithm : MonoBehaviour
                 maxFitnessGC = children[i];
             }
         }
+        maxFitnessEachGeneration[currentGeneration - 1] = maxFitnessObserved;
+        if (currentGeneration > 1)
+        {
+            fitnessImprovement = maxFitnessObserved - maxFitnessEachGeneration[currentGeneration - 2];
+            Debug.Log($"Fitness Improvement: {fitnessImprovement} in Generation: {currentGeneration}");
+        }
         if (currentGeneration < maxGenerations)
         {
             //do selection crossover mutation stuff
-
+            children = TournamentSelection(children, fitnessesOfCurrentGeneration);
+            if (children.Length!=maxCCPerGeneration)
+            {
+                Debug.LogError($"Tournament Selection returned unequal children than passed {children.Length} != {maxCCPerGeneration}");
+            }
             //and start next Generation
             currentCC = 0;
             return;
@@ -60,11 +73,11 @@ public class GeneticAlgorithm : MonoBehaviour
             Debug.Log($"MAximum fitness observed: {maxFitnessObserved} with Genetic Code {maxFitnessGC}");
             if (Application.isEditor)
             {
-                #if (UNITY_EDITOR)
+#if (UNITY_EDITOR)
                 {
                     UnityEditor.EditorApplication.isPlaying = false;
                 }
-                #endif
+#endif
             }
             else
             {
@@ -75,10 +88,10 @@ public class GeneticAlgorithm : MonoBehaviour
 
     void Update()
     {
-        Debug.Log("Update called", this);
+        // Debug.Log("Update called", this);
         if (crowdControllerIndividual == null)
         {
-            Debug.Log("Crowd controller is null", crowdControllerIndividual);
+            // Debug.Log("Crowd controller is null", crowdControllerIndividual);
             if (currentCC < maxCCPerGeneration)
             {
                 CreateNewCCInstance();
@@ -89,7 +102,7 @@ public class GeneticAlgorithm : MonoBehaviour
             }
             return;
         }
-        Debug.Log("Crowd controller is not null", crowdControllerIndividual);
+        // Debug.Log("Crowd controller is not null", crowdControllerIndividual);
         if (crowdControllerIndividual.fitness <= minFitnessCutoff)
         {
             crowdControllerIndividual.finishedSimulation = true;
@@ -97,10 +110,10 @@ public class GeneticAlgorithm : MonoBehaviour
         }
         if (crowdControllerIndividual.finishedSimulation)
         {
-            fitnessesOfCurrentGeneration[currentCC-1] = crowdControllerIndividual.fitness;
-            Debug.Log("Reached before logging instance end");
+            fitnessesOfCurrentGeneration[currentCC - 1] = crowdControllerIndividual.fitness;
+            // Debug.Log("Reached before logging instance end");
             Debug.Log($"Instance with Genetic Code: {crowdControllerIndividual.geneticCode} finished with fitness: {crowdControllerIndividual.fitness}");
-            Debug.Log("Reached after logging instance end");
+            // Debug.Log("Reached after logging instance end");
             crowdControllerIndividual.EndSimulation();
             crowdControllerIndividual = null;
         }
@@ -151,22 +164,19 @@ public class GeneticAlgorithm : MonoBehaviour
             mutate_child[r2] = '0';
         }
 
-        return Convert.ToInt64(mutate_child); //return child string after mutate operation
+        return Convert.ToInt64(mutate_child.ToString(), 2); //return child string after mutate operation
     }
-
-
-
-    public long[] TournamentSelection(int[] children, int[] fitnessArray)
+    public long[] TournamentSelection(long[] children, int[] fitnessArray)
     {
         System.Random r = new System.Random();
 
-        int min_child; //child with min fitness value 
-        int max_child; //child with max fitness value 
+        long min_child; //child with min fitness value 
+        long max_child; //child with max fitness value 
 
 
-        List<int> selected = new List<int>();
+        List<long> selected = new List<long>();
 
-        var children_fitness = new Dictionary<int, int>();
+        var children_fitness = new Dictionary<long, int>();
 
         for (int index = 0; index < children.Length; index++)
         {
@@ -187,15 +197,12 @@ public class GeneticAlgorithm : MonoBehaviour
             children_fitness.Remove(min_child);
             children = children.Where(val => val != min_child).ToArray();
         }
-
         children_length = children.Length; //length after removal of child with min fitness
-
-
         while (count != children_length)
         {
             count += 2;
 
-            int[] random_child_values;
+            long[] random_child_values;
             random_child_values = children.OrderBy(x => r.Next()).Take(2).ToArray();
 
             if (children_fitness[random_child_values[0]] >= children_fitness[random_child_values[1]])

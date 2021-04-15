@@ -28,6 +28,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             desiredDirection = new Vector3(0,0,0);//initial value
             crowdController = transform.root.GetComponent<CrowdController>();
             destinationWaypoint = Waypoints.GetFirstWaypoint();
+            destinationVector = destinationWaypoint.GetPosition();
             character = GetComponent<ThirdPersonCharacter>();
             // speed = UnityEngine.Random.Range(0.5f,1.0f);
             SetDesiredDirection();
@@ -71,22 +72,26 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 destinationWaypoint = destinationWaypoint.nextWaypoint;
                 if (!destinationWaypoint)
                 {
-                    Debug.Log("Finished the circuit");
-                    crowdController.UpdateFitness(100);
+                    // Debug.Log("Finished the circuit");
+                    crowdController.UpdateFitness(1000);
                     KillEthan();
                     return;
                 }
-                crowdController.UpdateFitness(5);
+                crowdController.UpdateFitness(50);
                 destinationVector = destinationWaypoint.GetPosition();
                 if(!crowdController.runningUnderGA)
                     SetDesiredDirection();
+            }
+            else if ((character.transform.position - destinationVector).magnitude <= 10f)
+            {
+                crowdController.UpdateFitness(1);
             }
         }
         public bool KillBelowYZero()
         {
             if (character.transform.position.y < 0)
             {
-                Debug.Log("Despawned from falling off the map ", character);
+                // Debug.Log("Despawned from falling off the map ", character);
                 KillEthan();
                 return true;
             }
