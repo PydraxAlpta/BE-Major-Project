@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 using System.Text;
+
 public class GeneticAlgorithm : MonoBehaviour
 {
     public long[] children;
@@ -71,6 +72,7 @@ public class GeneticAlgorithm : MonoBehaviour
             }
         }
     }
+
     void Update()
     {
         Debug.Log("Update called", this);
@@ -103,52 +105,131 @@ public class GeneticAlgorithm : MonoBehaviour
             crowdControllerIndividual = null;
         }
     }
-    public string crossover(string parent1, string parent2)
+
+    public List<long> crossover(string parent1, string parent2)
     {
         //Crossover function takes 2 parents as i/p
         //parents to be selected using some selection method 
+        List<long> children_after_crossover = new List<long>();
 
         parent1 = parent1.PadLeft(8, '0');
         parent2 = parent2.PadLeft(8, '0');
 
-        string crossoverChild = parent1.Substring(0, 4) + parent2.Substring(4, 4);
-        //python equivalent of parent1[0:4] + parent2[4:8] 
+        string crossover_child_1 = parent1.Substring(0, 4) + parent2.Substring(4, 4);
+        string crossover_child_2 = parent1.Substring(4, 0) + parent2.Substring(0, 4);
+        //python equivalent of parent1[0:4] + parent1[4:8] 
+        children_after_crossover.Add(Mutate(crossover_child_1));
+        children_after_crossover.Add(Mutate(crossover_child_2));
 
-        return crossoverChild; //single child string
+
+        return children_after_crossover; //single child string
     }
 
-    public string[] Mutate() //Mutate to be called after crossover phase
+    public long Mutate(string child) //Mutate to be called after crossover phase
     {
-        string[] geneticCodes = new string[children.Length];
         System.Random r = new System.Random();
-        for (int i = 0; i < children.Length; i++)
+        StringBuilder mutate_child;
+
+
+        mutate_child = new StringBuilder(child);
+        int r1 = r.Next(mutate_child.Length);
+        int r2 = r.Next(mutate_child.Length);
+        if (mutate_child[r1] == '0')
         {
+            mutate_child[r1] = '1';
+        }
+        else
+        {
+            mutate_child[r1] = '0';
+        }
+        if (mutate_child[r2] == '0')
+        {
+            mutate_child[r2] = '1';
+        }
+        else
+        {
+            mutate_child[r2] = '0';
+        }
 
-            StringBuilder temp = new StringBuilder(Convert.ToString(children[i], 2));
-            Debug.Log(i.ToString() + "th " + "Gene Before Mutation :" + temp);
-            int r1 = r.Next(temp.Length);
-            int r2 = r.Next(temp.Length);
+        return Convert.ToInt64(mutate_child); //return child string after mutate operation
+    }
 
-            if (temp[r1] == '0')
-            {
-                temp[r1] = '1';
-            }
-            else
-            {
-                temp[r1] = '0';
-            }
-            if (temp[r2] == '0')
-            {
-                temp[r2] = '1';
-            }
-            else
-            {
-                temp[r2] = '0';
-            }
-            geneticCodes[i] = temp.ToString();
-            Debug.Log(i.ToString() + "th " + "Gene After Mutation :" + geneticCodes[i]);
+
+
+    public long[] TournamentSelection(int[] children, int[] fitnessArray)
+    {
+        System.Random r = new System.Random();
+
+        int min_child; //child with min fitness value 
+        int max_child; //child with max fitness value 
+
+
+        List<int> selected = new List<int>();
+
+        var children_fitness = new Dictionary<int, int>();
+
+        for (int index = 0; index < children.Length; index++)
+        {
+            children_fitness.Add(children[index], fitnessArray[index]);
 
         }
-        return geneticCodes; //string <arr> of mutated children
+
+        max_child = children_fitness.Aggregate((a, b) => a.Value > b.Value ? a : b).Key;
+        min_child = children_fitness.Aggregate((a, b) => a.Value < b.Value ? a : b).Key;
+
+
+        int children_length;
+        int count = 0;
+
+        if (children.Length % 2 != 0) //if len(children) == odd; remove child with min fitness value to make len even
+        {
+
+            children_fitness.Remove(min_child);
+            children = children.Where(val => val != min_child).ToArray();
+        }
+
+        children_length = children.Length; //length after removal of child with min fitness
+
+
+        while (count != children_length)
+        {
+            count += 2;
+
+            int[] random_child_values;
+            random_child_values = children.OrderBy(x => r.Next()).Take(2).ToArray();
+
+            if (children_fitness[random_child_values[0]] >= children_fitness[random_child_values[1]])
+            {
+                selected.Add(random_child_values[0]);
+            }
+            else
+            {
+                selected.Add(random_child_values[1]);
+            }
+
+            foreach (var value in random_child_values)
+            {
+                children = children.Where(val => val != value).ToArray();
+
+            }
+
+        }
+
+        selected.Add(max_child); //add child with max fitness to make array even
+
+        List<long> temp = new List<long>();
+
+        for (int index = 0; index < selected.Count - 1; index++)
+        {
+            foreach (var crossed_child in crossover(Convert.ToString(selected[index], 2), Convert.ToString(selected[index + 1], 2)))
+            {
+                temp.Add(crossed_child);
+            }
+
+        }
+
+        return temp.ToArray();
     }
+
+
 }
