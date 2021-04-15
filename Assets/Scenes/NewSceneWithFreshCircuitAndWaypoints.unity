@@ -518,7 +518,7 @@ PrefabInstance:
     - target: {fileID: 8362511389543259509, guid: a7b91b47275d53642b7cb7d55ed8dd2f,
         type: 3}
       propertyPath: maxCCPerGeneration
-      value: 5
+      value: 4
       objectReference: {fileID: 0}
     - target: {fileID: 8362511389543259509, guid: a7b91b47275d53642b7cb7d55ed8dd2f,
         type: 3}

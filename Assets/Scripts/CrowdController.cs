@@ -6,7 +6,7 @@ using UnityEngine;
 public class CrowdController : MonoBehaviour
 {
     // Start is called before the first frame update
-    public string geneticCode;
+    public long geneticCode;
     public float[] weights;
     public bool runningUnderGA = true;
     public List<GameObject> Pedestrians;
@@ -24,25 +24,27 @@ public class CrowdController : MonoBehaviour
         if (!runningUnderGA)
             return;
         InterpretGeneticCode();
-        text.text = $"Genetic Code: {geneticCode.ToString()}\nWeights\nPself: {weights[0]}\nVself: {weights[1]}\nDself: {weights[2]}\nPothers: {weights[3]}\nVothers: {weights[4]}\nDothers: {weights[5]}";
+        text.text = $"Genetic Code: {geneticCode}\nWeights\nPself: {weights[0]}\nVself: {weights[1]}\nDself: {weights[2]}\nPothers: {weights[3]}\nVothers: {weights[4]}\nDothers: {weights[5]}";
         // InvokeRepeating("UpdateSimulation", 0, repeatRate);
     }
 
     private void InterpretGeneticCode()
     {
         weights = new float[6];
-        long gc = Convert.ToInt64(geneticCode, 2);
         int[] intWeights = new int[6];
-        long temp = gc;
+        ulong temp = (ulong)geneticCode;
         const int bitsPerWeight = 64 / 6;
+        ulong raisedBits = (ulong)Math.Pow(2,bitsPerWeight);
         for (int i = intWeights.Length - 1; i >= 0; i--)
         {
-            intWeights[i] = (int)(temp % bitsPerWeight); //floor division
-            temp /= bitsPerWeight;
+            intWeights[i] = (int)(temp % raisedBits); //floor division
+            temp = temp >> bitsPerWeight; 
         }
         for (int i = 0; i < weights.Length; i++)
         {
-            weights[i] = ((float)(intWeights[i] - bitsPerWeight / 2)) / bitsPerWeight;
+            weights[i] = (float)intWeights[i]/raisedBits;
+            weights[i] *=2;
+            weights[i] -=1;
         }
 
     }

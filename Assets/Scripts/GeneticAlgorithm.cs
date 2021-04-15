@@ -22,7 +22,7 @@ public class GeneticAlgorithm : MonoBehaviour
         children = new long[maxCCPerGeneration];
         for (int i = 0; i < children.Length; i++)
         {
-            children[i] = (long)UnityEngine.Random.Range(0, long.MaxValue);
+            children[i] = (long)UnityEngine.Random.Range(long.MinValue, long.MaxValue);
         }
         fitnessesOfCurrentGeneration = new int[maxCCPerGeneration];
         maxFitnessEachGeneration = new int[maxGenerations];
@@ -34,7 +34,7 @@ public class GeneticAlgorithm : MonoBehaviour
     {
         crowdControllerIndividual = Instantiate(crowdController);
         crowdControllerIndividual.runningUnderGA = true;
-        crowdControllerIndividual.geneticCode = Convert.ToString(children[currentCC], 2);
+        crowdControllerIndividual.geneticCode = children[currentCC];
         Debug.Log($"Instance with Genetic Code: {crowdControllerIndividual.geneticCode} started");
         currentCC++;
     }
