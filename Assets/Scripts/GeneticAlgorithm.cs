@@ -178,7 +178,7 @@ public class GeneticAlgorithm : MonoBehaviour
         // long min_child; //child with min fitness value 
         // long max_child; //child with max fitness value 
 
-        List<long> selected = new List<long>();
+        List<long> selected = children.ToList<long>();
 
         var children_fitness = new Dictionary<long, int>();
 
