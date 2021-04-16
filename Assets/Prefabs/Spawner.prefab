@@ -45,7 +45,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   spawnee: {fileID: 2773737010207525906, guid: deb378043e9c790438e9783c340fdbff, type: 3}
   stopSpawning: 0
-  spawnTime: 2
+  spawnTime: 0
   spawnDelay: 3
   spawnCount: 0
   maximumSpawns: 25

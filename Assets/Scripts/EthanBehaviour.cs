@@ -82,7 +82,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 if(!crowdController.runningUnderGA)
                     SetDesiredDirection();
             }
-            else if ((character.transform.position - destinationVector).magnitude <= 10f)
+            else if ((character.transform.position - destinationVector).magnitude <= 20f)
             {
                 crowdController.UpdateFitness(1);
             }
@@ -92,6 +92,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
             if (character.transform.position.y < 0)
             {
                 // Debug.Log("Despawned from falling off the map ", character);
+                crowdController.UpdateFitness(-1000);
                 KillEthan();
                 return true;
             }

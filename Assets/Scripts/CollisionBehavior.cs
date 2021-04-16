@@ -10,31 +10,36 @@ public class CollisionBehavior : MonoBehaviour
     }
     void Update()
     {
-        
+
     }
     public void OnCollisionEnter(Collision collision)
     {
         // Debug.Log("On Collision Enter: " + collision.collider.name);
         // Debug.Log(collision.gameObject.tag);
-        if(collision.gameObject.tag != "Walkable")
+        if (collision.gameObject.tag != "Walkable")
         {
             // Debug.Log("Collided with non walkway",this.gameObject);
-            crowdController.UpdateFitness(-50);
+            crowdController.UpdateFitness(-100);
         }
     }
 
     public void OnCollisionStay(Collision collision)
     {
         // Debug.Log("On Collision Stay: " + collision.collider.name);
-        if(collision.gameObject.tag != "Walkable")
+        if (collision.gameObject.tag != "Walkable")
         {
             // Debug.Log("Colliding with non walkway",this.gameObject);
-            crowdController.UpdateFitness(-1);
+            if (UnityEngine.Random.Range(0, 10) > 5)
+                crowdController.UpdateFitness(-1);
         }
     }
 
     public void OnCollisionExit(Collision collision)
     {
         // Debug.Log("On Collision Exit: " + collision.collider.name);
+        if (collision.collider.tag != "Walkable")
+        {
+            crowdController.UpdateFitness(50);
+        }
     }
 }
