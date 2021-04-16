@@ -30,7 +30,7 @@ public class WaypointEditor
             Gizmos.color = Color.red;
             Vector3 offset = waypoint.transform.right * waypoint.width / 2f;
             Vector3 offsetTo = waypoint.previousWaypoint.transform.right * waypoint.previousWaypoint.width / 2f;
-            Gizmos.DrawLine(waypoint.transform.position + offset,  waypoint.transform.position + offsetTo);
+            Gizmos.DrawLine(waypoint.transform.position + offset,  waypoint.previousWaypoint.transform.position + offsetTo);
         }
 
         if (waypoint.nextWaypoint != null)
@@ -38,7 +38,7 @@ public class WaypointEditor
             Gizmos.color = Color.green;
             Vector3 offset = waypoint.transform.right * -waypoint.width / 2f;
             Vector3 offsetTo = waypoint.nextWaypoint.transform.right * -waypoint.nextWaypoint.width / 2f;
-            Gizmos.DrawLine(waypoint.transform.position + offset,  waypoint.transform.position + offsetTo);
+            Gizmos.DrawLine(waypoint.transform.position + offset,  waypoint.nextWaypoint.transform.position + offsetTo);
         }
 
     }
