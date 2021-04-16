@@ -175,8 +175,8 @@ public class GeneticAlgorithm : MonoBehaviour
     {
         System.Random r = new System.Random();
 
-        long min_child; //child with min fitness value 
-        long max_child; //child with max fitness value 
+        // long min_child; //child with min fitness value 
+        // long max_child; //child with max fitness value 
 
         List<long> selected = new List<long>();
 
@@ -189,40 +189,55 @@ public class GeneticAlgorithm : MonoBehaviour
                 children_fitness.Add(children[index], fitnessArray[index]);
             }
         }
-
-        max_child = children_fitness.Aggregate((a, b) => a.Value > b.Value ? a : b).Key;
-        min_child = children_fitness.Aggregate((a, b) => a.Value < b.Value ? a : b).Key;
-
-
-        int children_length;
-        int count = 0;
-
-        if (children_fitness.Count % 2 != 0) //if len(children) == odd; remove child with min fitness value to make len even
+        long min=0, minValue = long.MaxValue, min2=0, max=0, maxValue = long.MinValue, max2=0;
+        foreach (var key in children_fitness.Keys)
         {
-            children_fitness.Remove(min_child);
-            // children = children.Where(val => val != min_child).ToArray();
-        }
-        children_length = children_fitness.Count; //length after removal of child with min fitness
-        while (count < children_length)
-        {
-            count += 2;
-
-            long[] random_child_keys;
-            random_child_keys = children_fitness.Keys.OrderBy(x => r.Next()).Take(2).ToArray();
-
-            if (children_fitness[random_child_keys[0]] >= children_fitness[random_child_keys[1]])
+            if (children_fitness[key] < minValue)
             {
-                selected.Add(random_child_keys[0]);
+                min2 = min;
+                min = key;
+                minValue = children_fitness[key];
             }
-            else
+            if (children_fitness[key] > minValue)
             {
-                selected.Add(random_child_keys[1]);
-            }
-            foreach (var key in random_child_keys)
-            {
-                children_fitness.Remove(key);
+                max2 = max;
+                max = key;
+                maxValue = children_fitness[key];
             }
         }
+        // max_child = children_fitness.Aggregate((a, b) => a.Value > b.Value ? a : b).Key;
+        // min_child = children_fitness.Aggregate((a, b) => a.Value < b.Value ? a : b).Key;
+
+
+        // int children_length;
+        // // int count = 0;
+
+        // if (children_fitness.Count % 2 != 0) //if len(children) == odd; remove child with min fitness value to make len even
+        // {
+        //     children_fitness.Remove(min_child);
+        //     // children = children.Where(val => val != min_child).ToArray();
+        // }
+        // children_length = children_fitness.Count; //length after removal of child with min fitness
+        // while (count < children_length)
+        // {
+        //     count += 2;
+
+        //     long[] random_child_keys;
+        //     random_child_keys = children_fitness.Keys.OrderBy(x => r.Next()).Take(2).ToArray();
+
+        //     if (children_fitness[random_child_keys[0]] >= children_fitness[random_child_keys[1]])
+        //     {
+        //         selected.Add(random_child_keys[0]);
+        //     }
+        //     else
+        //     {
+        //         selected.Add(random_child_keys[1]);
+        //     }
+        //     foreach (var key in random_child_keys)
+        //     {
+        //         children_fitness.Remove(key);
+        //     }
+        // }
 
         // selected.Add(max_child); //add child with max fitness to make array even
 
@@ -250,17 +265,22 @@ public class GeneticAlgorithm : MonoBehaviour
         */
         //Better Approach: Selecting all the winner parents from Selection and the children of 2 best parents
 
-        long best_parent_1 = children_fitness.Aggregate((a, b) => a.Value > b.Value ? a : b).Key;
+        // long best_parent_1 = children_fitness.Aggregate((a, b) => a.Value > b.Value ? a : b).Key;
 
-        children_fitness.Remove(max_child);              //remove the already selected parent with max fitness to avoid repetition
+        // children_fitness.Remove(best_parent_1);              //remove the already selected parent with max fitness to avoid repetition
 
-        long best_parent_2 = children_fitness.Aggregate((a, b) => a.Value > b.Value ? a : b).Key; //parent with 2nd highest fitness
+        // long best_parent_2 = children_fitness.Aggregate((a, b) => a.Value > b.Value ? a : b).Key; //parent with 2nd highest fitness
 
-        foreach (var child in crossover(Convert.ToString(children_fitness[best_parent_1], 2), Convert.ToString(children_fitness[best_parent_2], 2)))
+        foreach (var child in crossover(Convert.ToString(max, 2), Convert.ToString(max2, 2)))
         {
             selected.Add(child); //add children of 2 best parents in the selected array. 
         }
-        
+        selected.Remove(min);
+        selected.Remove(min2);
+        while(selected.Count<maxCCPerGeneration)
+        {
+            selected.Add((long)UnityEngine.Random.Range(long.MinValue,long.MaxValue));
+        }
         return selected.ToArray();
     }
 }
