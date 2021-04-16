@@ -114,7 +114,7 @@ public class GeneticAlgorithm : MonoBehaviour
         }
         if (crowdControllerIndividual.finishedSimulation)
         {
-            fitnessesOfCurrentGeneration[currentCC - 1] = crowdControllerIndividual.fitness;
+            fitnessesOfCurrentGeneration[currentCC - 1] = (crowdControllerIndividual.fitness + crowdControllerIndividual.maxFitness) /2;
             // Debug.Log("Reached before logging instance end");
             Debug.Log($"Instance with Genetic Code: {crowdControllerIndividual.geneticCode} finished with fitness: {crowdControllerIndividual.fitness}");
             // Debug.Log("Reached after logging instance end");
