@@ -16,7 +16,8 @@ public class GeneticAlgorithm : MonoBehaviour
     public int[] maxFitnessEachGeneration;
     public int maxFitnessObserved = int.MinValue;
     public long maxFitnessGC = -1;
-    public const int minFitnessCutoff = -4000;
+    public const int minFitnessCutoff = -10000;
+    public float mutateOdds = 0.1f;
     void Start()
     {
         children = new long[maxCCPerGeneration];
@@ -59,7 +60,10 @@ public class GeneticAlgorithm : MonoBehaviour
         if (currentGeneration < maxGenerations)
         {
             //do selection crossover mutation stuff
-            children = TournamentSelection(children, fitnessesOfCurrentGeneration);
+            long [] tempChildren = new long[maxCCPerGeneration];
+            Array.Copy(children,tempChildren,maxCCPerGeneration);
+            tempChildren = TournamentSelection(tempChildren, fitnessesOfCurrentGeneration);
+            Array.Copy(tempChildren,children,maxCCPerGeneration);
             if (children.Length!=maxCCPerGeneration)
             {
                 Debug.LogError($"Tournament Selection returned unequal children than passed {children.Length} != {maxCCPerGeneration}");
@@ -124,12 +128,12 @@ public class GeneticAlgorithm : MonoBehaviour
         //Crossover function takes 2 parents as i/p
         //parents to be selected using some selection method 
         List<long> children_after_crossover = new List<long>();
+        int lengthString = 64;
+        parent1 = parent1.PadLeft(lengthString, '0');
+        parent2 = parent2.PadLeft(lengthString, '0');
 
-        parent1 = parent1.PadLeft(8, '0');
-        parent2 = parent2.PadLeft(8, '0');
-
-        string crossover_child_1 = parent1.Substring(0, 4) + parent2.Substring(4, 4);
-        string crossover_child_2 = parent1.Substring(4, 0) + parent2.Substring(0, 4);
+        string crossover_child_1 = parent1.Substring(0, lengthString/2) + parent2.Substring(lengthString/2, lengthString/2);
+        string crossover_child_2 = parent2.Substring(0, lengthString/2) + parent1.Substring(lengthString/2, lengthString/2);
         //python equivalent of parent1[0:4] + parent1[4:8] 
         children_after_crossover.Add(Mutate(crossover_child_1));
         children_after_crossover.Add(Mutate(crossover_child_2));
@@ -173,15 +177,16 @@ public class GeneticAlgorithm : MonoBehaviour
         long min_child; //child with min fitness value 
         long max_child; //child with max fitness value 
 
-
         List<long> selected = new List<long>();
 
         var children_fitness = new Dictionary<long, int>();
 
         for (int index = 0; index < children.Length; index++)
         {
-            children_fitness.Add(children[index], fitnessArray[index]);
-
+            if(!children_fitness.ContainsKey(children[index]))
+            {
+                children_fitness.Add(children[index], fitnessArray[index]);
+            }
         }
 
         max_child = children_fitness.Aggregate((a, b) => a.Value > b.Value ? a : b).Key;
@@ -191,38 +196,34 @@ public class GeneticAlgorithm : MonoBehaviour
         int children_length;
         int count = 0;
 
-        if (children.Length % 2 != 0) //if len(children) == odd; remove child with min fitness value to make len even
+        if (children_fitness.Count % 2 != 0) //if len(children) == odd; remove child with min fitness value to make len even
         {
-
             children_fitness.Remove(min_child);
-            children = children.Where(val => val != min_child).ToArray();
+            // children = children.Where(val => val != min_child).ToArray();
         }
-        children_length = children.Length; //length after removal of child with min fitness
-        while (count != children_length)
+        children_length = children_fitness.Count; //length after removal of child with min fitness
+        while (count < children_length)
         {
             count += 2;
 
-            long[] random_child_values;
-            random_child_values = children.OrderBy(x => r.Next()).Take(2).ToArray();
+            long[] random_child_keys;
+            random_child_keys = children_fitness.Keys.OrderBy(x => r.Next()).Take(2).ToArray();
 
-            if (children_fitness[random_child_values[0]] >= children_fitness[random_child_values[1]])
+            if (children_fitness[random_child_keys[0]] >= children_fitness[random_child_keys[1]])
             {
-                selected.Add(random_child_values[0]);
+                selected.Add(random_child_keys[0]);
             }
             else
             {
-                selected.Add(random_child_values[1]);
+                selected.Add(random_child_keys[1]);
             }
-
-            foreach (var value in random_child_values)
+            foreach (var key in random_child_keys)
             {
-                children = children.Where(val => val != value).ToArray();
-
+                children_fitness.Remove(key);
             }
-
         }
 
-        selected.Add(max_child); //add child with max fitness to make array even
+        // selected.Add(max_child); //add child with max fitness to make array even
 
         List<long> temp = new List<long>();
 
@@ -232,11 +233,18 @@ public class GeneticAlgorithm : MonoBehaviour
             {
                 temp.Add(crossed_child);
             }
-
         }
-
+        while(temp.Count<maxCCPerGeneration)
+        {
+            temp.Add((long)UnityEngine.Random.Range(long.MinValue,long.MaxValue));
+        }
+        for (int i = 0; i < temp.Count; i++)
+        {
+            if (r.Next(100) < (int)(mutateOdds*100))
+            {
+                temp[i] = Mutate(Convert.ToString(temp[i],2));
+            }
+        }
         return temp.ToArray();
     }
-
-
 }

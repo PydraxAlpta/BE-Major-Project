@@ -7,8 +7,8 @@ public class TimedSpawn : MonoBehaviour
 
     public GameObject spawnee;
     public bool stopSpawning = false;
-    public float spawnTime;
-    public float spawnDelay;
+    public float spawnTime = 2;
+    public float spawnDelay = 3;
     public int spawnCount = 0;
     private CrowdController crowdController;
     public int maximumSpawns = 25;

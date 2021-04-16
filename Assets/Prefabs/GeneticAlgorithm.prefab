@@ -12,7 +12,7 @@ GameObject:
   - component: {fileID: 8362511389543259509}
   m_Layer: 0
   m_Name: GeneticAlgorithm
-  m_TagString: Untagged
+  m_TagString: GeneticAlgorithm
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -47,9 +47,11 @@ MonoBehaviour:
   CCPrefab: {fileID: 7071100891432489907, guid: 4b93338fa642130488c2c24cbc9b3ab3,
     type: 3}
   currentGeneration: 0
-  maxGenerations: 2
+  maxGenerations: 5
   currentCC: 0
-  maxCCPerGeneration: 5
+  maxCCPerGeneration: 10
   fitnessesOfCurrentGeneration: 
+  maxFitnessEachGeneration: 
   maxFitnessObserved: -2147483648
   maxFitnessGC: -1
+  mutateOdds: 0.1

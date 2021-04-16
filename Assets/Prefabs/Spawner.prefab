@@ -24,7 +24,7 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2630620525127519201}
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 2.8453064, y: 2.0672197, z: -11.111935}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
@@ -43,9 +43,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5f3cc1c8509d49340b576fd2c5f54192, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  spawnee: {fileID: 0}
+  spawnee: {fileID: 2773737010207525906, guid: deb378043e9c790438e9783c340fdbff, type: 3}
   stopSpawning: 0
-  spawnTime: 0
+  spawnTime: 2
   spawnDelay: 3
   spawnCount: 0
-  maximumSpawns: 10
+  maximumSpawns: 25
