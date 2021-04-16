@@ -140,7 +140,7 @@ public class GeneticAlgorithm : MonoBehaviour
         children_after_crossover.Add(Mutate(crossover_child_2));
 
 
-        return children_after_crossover; //single child string
+        return children_after_crossover; //list of 2 children
     }
 
     public long Mutate(string child) //Mutate to be called after crossover phase
@@ -226,8 +226,9 @@ public class GeneticAlgorithm : MonoBehaviour
 
         // selected.Add(max_child); //add child with max fitness to make array even
 
-        List<long> temp = new List<long>();
-
+        //List<long> temp = new List<long>();
+        /*
+         * Old Logic
         for (int index = 0; index < selected.Count - 1; index++)
         {
             foreach (var crossed_child in crossover(Convert.ToString(selected[index], 2), Convert.ToString(selected[index + 1], 2)))
@@ -246,6 +247,20 @@ public class GeneticAlgorithm : MonoBehaviour
                 temp[i] = Mutate(Convert.ToString(temp[i],2));
             }
         }
-        return temp.ToArray();
+        */
+        //Better Approach: Selecting all the winner parents from Selection and the children of 2 best parents
+
+        long best_parent_1 = children_fitness.Aggregate((a, b) => a.Value > b.Value ? a : b).Key;
+
+        children_fitness.Remove(max_child);              //remove the already selected parent with max fitness to avoid repetition
+
+        long best_parent_2 = children_fitness.Aggregate((a, b) => a.Value > b.Value ? a : b).Key; //parent with 2nd highest fitness
+
+        foreach (var child in crossover(Convert.ToString(children_fitness[best_parent_1], 2), Convert.ToString(children_fitness[best_parent_2], 2)))
+        {
+            selected.Add(child); //add children of 2 best parents in the selected array. 
+        }
+        
+        return selected.ToArray();
     }
 }
