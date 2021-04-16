@@ -46,7 +46,6 @@ public class CrowdController : MonoBehaviour
             weights[i] *=2;
             weights[i] -=1;
         }
-
     }
     public void UpdateFitness(int change)
     {
