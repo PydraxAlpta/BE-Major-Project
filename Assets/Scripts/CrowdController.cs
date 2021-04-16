@@ -10,7 +10,7 @@ public class CrowdController : MonoBehaviour
     public float[] weights;
     public bool runningUnderGA = true;
     public List<GameObject> Pedestrians;
-    public int fitness;
+    public int fitness, maxFitness = int.MinValue;
     public GameObject simulation;
     UnityEngine.UI.Text text;
     public int repeatRate;
@@ -51,6 +51,10 @@ public class CrowdController : MonoBehaviour
     public void UpdateFitness(int change)
     {
         fitness += change;
+        if(fitness > maxFitness)
+        {
+            maxFitness = fitness;
+        }
     }
     private bool firstRun = true;
     void FixedUpdate()
