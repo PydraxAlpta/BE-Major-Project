@@ -57,7 +57,7 @@ namespace UnityStandardAssets.Characters.ThirdPerson
                 return;
             }
             if(!crowdController.runningUnderGA)
-                if (UnityEngine.Random.Range(1, 1000) > 990)
+                if (UnityEngine.Random.Range(1, 1000) > 800)
                     SetDesiredDirection(); //low probabilistic call to set on the right direction 
                                            //if it misses the waypoint for whatever reason
             character.Move(speed * desiredDirection, false, false);

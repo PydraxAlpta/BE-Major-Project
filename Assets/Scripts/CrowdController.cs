@@ -34,23 +34,23 @@ public class CrowdController : MonoBehaviour
         int[] intWeights = new int[6];
         ulong temp = (ulong)geneticCode;
         const int bitsPerWeight = 64 / 6;
-        ulong raisedBits = (ulong)Math.Pow(2,bitsPerWeight);
+        ulong raisedBits = (ulong)Math.Pow(2, bitsPerWeight);
         for (int i = intWeights.Length - 1; i >= 0; i--)
         {
             intWeights[i] = (int)(temp % raisedBits); //floor division
-            temp = temp >> bitsPerWeight; 
+            temp = temp >> bitsPerWeight;
         }
         for (int i = 0; i < weights.Length; i++)
         {
-            weights[i] = (float)intWeights[i]/raisedBits;
-            weights[i] *=2;
-            weights[i] -=1;
+            weights[i] = (float)intWeights[i] / raisedBits;
+            weights[i] *= 2;
+            weights[i] -= 1;
         }
     }
     public void UpdateFitness(int change)
     {
         fitness += change;
-        if(fitness > maxFitness)
+        if (fitness > maxFitness)
         {
             maxFitness = fitness;
         }
@@ -73,6 +73,10 @@ public class CrowdController : MonoBehaviour
             {
                 return;
             }
+        }
+        if (!runningUnderGA)
+        {
+            return;
         }
         List<Vector3> Positions = new List<Vector3>(), Velocities = new List<Vector3>(), Destinations = new List<Vector3>();
         Vector3 sumOtherPedestrians = new Vector3();
@@ -121,6 +125,22 @@ public class CrowdController : MonoBehaviour
     public void EndSimulation()
     {
         Debug.Log("Ending simulation", this.gameObject);
-        Destroy(this.gameObject);
+        if(runningUnderGA)
+        {
+            Destroy(this.gameObject);
+        }
+        else
+        {
+            if(Application.isEditor)
+            {
+                #if UNITY_EDITOR
+                UnityEditor.EditorApplication.isPlaying = false;
+                #endif
+            }
+            else
+            {
+                Application.Quit(0);
+            }
+        }
     }
 }
