@@ -25,7 +25,7 @@ public class GeneticAlgorithm : MonoBehaviour
         {
             children[i] = (long)UnityEngine.Random.Range(long.MinValue, long.MaxValue);
         }
-        children[1] = 564048928702976; //:tomsneaky:
+        // children[1] = 564048928702976; //:tomsneaky:
         fitnessesOfCurrentGeneration = new int[maxCCPerGeneration];
         maxFitnessEachGeneration = new int[maxGenerations];
         crowdController = CCPrefab.GetComponent<CrowdController>();
