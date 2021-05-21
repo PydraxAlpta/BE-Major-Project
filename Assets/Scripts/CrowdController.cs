@@ -47,7 +47,7 @@ public class CrowdController : MonoBehaviour
             weights[i] -= 1;
         }
         //section that sets Vs,Po,Vo,Do to 0, so that test run only considers Ps and Ds
-        weights[1] = weights[3] = weights[4] = weights[5] = 0;
+        //weights[1] = weights[3] = weights[4] = weights[5] = 0;
     }
     public void UpdateFitness(int change)
     {
